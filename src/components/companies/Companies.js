@@ -1,5 +1,5 @@
 import React from 'react'
-import {c, useDispatch} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import styled from 'styled-components'
 import { colormap } from '../../colormap'
 //import FormWrupper from  './FormWrupper'

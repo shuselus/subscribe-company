@@ -1,32 +1,43 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import colormap from '../colormap';
+import { colormap } from '../colormap';
 
 const ButtonContainer = styled.button`
-    background: ${props => props.primary ? "palevioletred" : "white"};
+    background: ${props => props.color ? props.color : 'none'};
     margin: 1em;
     padding: 0.25em 1em;
-    border: 2px solid palevioletred;
+    border: 2px solid  
+    ${props => props.border ?
+        props.border : 
+        !props.color ?
+        colormap.primaryBgColor :
+        'none'};
     border-radius: 3px;
+    cursor: pointer;
 `;
 
 const ButtonLabel = styled.label`
-    color: ${props => props.primary ? "white" : "palevioletred"};
+    color: ${props => props.color ? props.color : colormap.primaryTxtColor};
     font-size: 1em;
 `;
 
-const ActionButton = ({label, style, handler}) => {
-    const [disabled, setDisabled] = useState(false);
+const ActionButton = ({label, style, disabled, handler}) => {
+    const [isDisabled, setIsDisabled] = useState(disabled ?? false);
     
-
+    console.log("ActionButton>>>>",label, style, disabled, handler);
     return (
         <ButtonContainer 
-            disabled={disabled} 
+            disabled={isDisabled} 
             onClick={handler}
-            color={style.color}
-            animation={style.animation}
+            color={style && style.bgColor}
+            border = {style && style.border}
+            animation={style && style.animation}
         >
-            <ButtonLabel>{label}</ButtonLabel>
+            <ButtonLabel
+                color={style && style.color}
+            >
+                {label}
+            </ButtonLabel>
         </ButtonContainer>
     )
 }

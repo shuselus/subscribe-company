@@ -69,6 +69,7 @@ const DropdownSelect = (
     tytle,
     selectionType,
     seartchField,
+    selectedCompany,
     handler
 }
 ) => {
@@ -94,7 +95,7 @@ const DropdownSelect = (
                   name="companies"
                   value={name}
                   defaultChecked={selectedCompany === name}
-                  onChange={(e) => setSelected(e.target.name)}
+                  onChange={(e) => handler(e.target.name)}
                 />
                 <span className="radio-control"></span>
               </RadioInput>

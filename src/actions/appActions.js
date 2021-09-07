@@ -34,10 +34,10 @@ export const reconnect = (msg) => {
   };
 };
 
-export const errorOnFetchApiData = (data) => {
+export const errorOnFetchApiData = (msg) => {
   return {
     type: ERROR_MESSAGE,
-    payload: data,
+    payload: msg,
   };
 };
 
@@ -48,10 +48,15 @@ export const getApiData = () => {
     return FetchApiData()
       .then(({ data }) => {
         console.log("getApiData>>>> ", data);
+        //initialize the apiData in redux store
         dispatch(apiData(data));
-        dispatch(selectedCompanyName(data["companies"][Math.floor(Math.random()*data.length)]))
+        //random select company, according to the task requirements
+        //dispatch(selectedCompanyName(data["companies"][Math.floor(Math.random()*data.length)]))
       })
-      .catch((error) => dispatch(errorOnFetchApiData(error)));
+      .catch((error) => {
+        console.log("error>>>>", error)
+        dispatch(errorOnFetchApiData(error.message))
+      });
   };
 };
 
