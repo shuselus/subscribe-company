@@ -1,5 +1,6 @@
 import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
+import {selectedCompanyName} from '../../actions/appActions'
 import styled from 'styled-components'
 import { colormap } from '../../colormap'
 //import FormWrupper from  './FormWrupper'
@@ -11,16 +12,19 @@ const Container = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: flex-start
+    align-items: flex-start;
+    justify-content: center;
     color: ${colormap.primaryTxtColor};
 `;
 
 const Companies = ({data}) => {
-    const {selectedCompany} = useSelector(state => state.appDataReducer)
+    const {selectedCompany} = useSelector(state => state.appDataReducer);
+    const dispatch = useDispatch();
     console.log("Companies>>>>", data);
 
-    const getSelectedData = (data) => {
-       console.log("getSelectedData>>>>", data)
+    const getSelectedData = (companyName) => {
+       console.log("getSelectedData>>>>", companyName);
+       dispatch(selectedCompanyName(companyName));
     }
 
     return (
@@ -28,7 +32,7 @@ const Companies = ({data}) => {
             <DropdownSelect 
             data={data.organizations} 
             type="radio" 
-            title="companies" 
+            title="company" 
             selectedCompany={selectedCompany}
             handler={getSelectedData}/>
         </Container>

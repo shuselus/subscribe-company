@@ -15,6 +15,7 @@ const FetchApiData = async () => {
     
     catch(error){
        console.error(`FetchApiData ERROR: ${error}`)
+       // dispatch(errorOnFetchApiData(error.message))
     }
 }
 

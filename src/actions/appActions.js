@@ -50,8 +50,6 @@ export const getApiData = () => {
         console.log("getApiData>>>> ", data);
         //initialize the apiData in redux store
         dispatch(apiData(data));
-        //random select company, according to the task requirements
-        //dispatch(selectedCompanyName(data["companies"][Math.floor(Math.random()*data.length)]))
       })
       .catch((error) => {
         console.log("error>>>>", error)

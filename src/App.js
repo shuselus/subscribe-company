@@ -5,7 +5,7 @@ import {BrowserRouter as Router,
   Route,
   Link
  } from "react-router-dom";
-import { getApiData } from './actions/appActions'
+import { getApiData, selectedCompanyName } from './actions/appActions'
 import Header from './components/header/Header'
 import Companies from './components/companies/Companies'
 import ErrorMessage from './components/ErrorMessage'
@@ -55,6 +55,12 @@ function App() {
   useEffect(()=>{
     console.log("data>>>>>>", data && Object.entries(data).length > 0);
     if(data && Object.entries(data).length > 0){
+      //random select company, according to the task requirements
+      if(!selectedCompany){
+        const companies = data["organizations"];
+        const companyName = companies[Math.floor(Math.random() * companies.length)].name;
+        dispatch(selectedCompanyName(companyName));
+      }
       setApiData(data);
       setLoading(false);
     }
