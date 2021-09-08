@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
+import useToggle from '../../hooks/useToggle'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp} from "@fortawesome/free-solid-svg-icons";
-import { colormap } from '../../colormap'
+import SelectionItem from '../SelectionItem'
+//import { colormap } from '../../colormap'
 
 const Container = styled.div`
     position: relative;
@@ -64,56 +66,22 @@ const DropdownContent = styled.div`
     overflow-y: auto;
 `;
 
-const Radio = styled.label`
-    font-size: 1.3rem;
-    color: var(--color);
-    display: grid;
-    grid-template-columns: min-content auto;
-    grid-gap: 0.5em;
-    align-items: center;
-    justify-items: start;
-    overflow: hidden;
-    .radio-label {
-        line-height: 1.5;
-    }
-`;
-const RadioInput= styled.span` 
-    input {
-        display: flex;
-        opacity: 0;
-        width: 0;
-        height: 0;
-        ${props => props.type === 'radio' && `
-        &:checked + .radio-control {
-            background: radial-gradient(currentcolor 50%, rgba(255, 0, 0, 0) 51%);
-        `}
-    }
-    .radio-control {
-        display: block;
-        width: 0.8em;
-        height: 0.8em;
-        border: 0.1em solid currentColor;
-        transform: translateY(-0.28em);
-        ${props => props.type === 'radio' && `
-           border-radius: 50%;
-        `}
-      }
-`;
+
+    
 
 const DropdownSelect = (
 {
     data,
     type,
     title,
-    selectionType,
     seartchField,
-    selectedItem,
+    defaultSelected,
     handler
 }
 ) => {
     const [listData, setListdata] =  useState([...data]);
-    const [expanded, setExpanded] = useState(false);
-    const [expandIsDisabled, setExpandIsDisabled] = useState(!data?.length);
+    const [expanded, setExpanded] = useToggle(false);
+    const [expandIsDisabled, setExpandIsDisabled] = useState(false);
 
     console.log("DropdownSelect>>>",type, title,!data?.length);
 
@@ -121,6 +89,7 @@ const DropdownSelect = (
         if(data?.length){
             setListdata([...data]);
             setExpandIsDisabled(false);
+            setExpanded(true)
         }
         return () => {
            // cleanup
@@ -144,20 +113,28 @@ const DropdownSelect = (
         <DropdownContent expanded={expanded}>
         {listData?.length &&
           data.map((item) => (
-            <Radio key={item.id} type={type}>
-              <RadioInput type={type}>
-                <input
-                  type={type}
-                  name={title}
-                  value={item.name}
-                  data = {item}
-                  defaultChecked={selectedItem && selectedItem === item.name}
-                  onChange={(e) => handler(item)}
-                />
-                <span className="radio-control"></span>
-              </RadioInput>
-              <span className="radio-label">{item.name}</span>
-            </Radio>
+              <SelectionItem 
+              key={item.id} 
+              type={type} 
+              data={item}
+              groupName={title} 
+              defaultSelected={defaultSelected && defaultSelected === item.name}
+              handler={handler}
+              />
+            // <Radio key={item.id} type={type}>
+            //   <RadioInput type={type}>
+            //     <input
+            //       type={type}
+            //       name={title}
+            //       value={item.name}
+            //       data = {item}
+            //       defaultChecked={selectedItem && selectedItem === item.name}
+            //       onChange={(e) => handler(item)}
+            //     />
+            //     <span className="radio-control"></span>
+            //   </RadioInput>
+            //   <span className="radio-label">{item.name}</span>
+            // </Radio>
           ))}
           </DropdownContent>
       </Container>

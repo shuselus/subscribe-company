@@ -10,7 +10,8 @@ import Header from './components/header/Header'
 import Companies from './components/companies/Companies'
 import ErrorMessage from './components/ErrorMessage'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { faSpinner} from "@fortawesome/free-solid-svg-icons";
+//import { styles } from "../../styles/variables";
 
 export const contextAppData = React.createContext(null);
 

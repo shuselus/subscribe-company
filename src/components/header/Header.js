@@ -3,12 +3,13 @@ import Logo from './Logo'
 import NavBar from './navbar/NavBar'
 import styled from 'styled-components'
 import { colormap } from '../../colormap'
-import { library} from "@fortawesome/fontawesome-svg-core";
-import { fab } from "@fortawesome/free-brands-svg-icons";
-//import { styles } from "../../styles/variables";
-//import PropTypes from 'prop-types'
 
-library.add(fab);
+// import { library} from "@fortawesome/fontawesome-svg-core";
+// import { fab } from "@fortawesome/free-brands-svg-icons";
+// import { faChevronUp, faCheck} from "@fortawesome/free-solid-svg-icons";
+ //import { styles } from "../../styles/variables";
+ //import PropTypes from 'prop-types'
+// library.add(fab, faChevronUp, faCheck);
 
 const HeaderContainer = styled.header`
     width: 100%;

@@ -28,30 +28,47 @@ const FormContainer = styled.div`
 
 const Companies = ({data}) => {
     const [users, setUsers] = useState([]);
-    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedUsersData, setSelectedUsersData] = useState([]);
     const {selectedCompany} = useSelector(state => state.appDataReducer);
     const dispatch = useDispatch();
     console.log("Companies>>>>", data);
 
     const getSelectedCompany = useCallback((company) => {
-       console.log("getSelectedData>>>>", company.name);
-       dispatch(selectedCompanyName(company.name));
-       const usersData = data.users.filter(user => 
-                user.organizationId === company.id);
-                // {
-                //     name: `${user.firstName} ${user.lastName}`,
-                //     id: user.id, 
-                //     organizationId: user.organizationId
-                // }
-       console.log("usersData>>>>>", usersData);
-       setUsers(usersData);
+        console.log("getSelectedData>>>>", company.name);
+        dispatch(selectedCompanyName(company.name));
+        const usersData = data.users.filter(user => 
+                    user.organizationId === company.id);
+        let modefiedUsersData = []
+        usersData.forEach((user) =>{
+            const obj = {
+               name: `${user.firstName} ${user.lastName}`,
+               id: user.id, 
+               organizationId: user.organizationId
+            }
+            modefiedUsersData.push(obj);
+        })
+       console.log("usersData>>>>>", modefiedUsersData);
+       setUsers(modefiedUsersData);
     },[data]);
 
-    const getSelectedUser = useCallback((user) => {
-        console.log("getSelectedUser>>>>", user);
-        setSelectedUsers([...selectedUsers, user])
-        //dispatch(selectedUsers(users));
-     },[data]);
+    const getSelectedUser = useCallback((selected, checked) => {
+        console.log("getSelectedUser>>>>", selected, checked);
+        
+        if(checked){
+            const selectedUsers = selectedUsersData.filter(user => user.id !== selected.id);
+            setSelectedUsersData([...selectedUsers]);
+        }else{
+            const userData = data.users.find(user => user.id === selected.id);
+            setSelectedUsersData([...selectedUsers, userData]);
+        }
+        
+    },[data]);
+
+    const onSubmit = (e) => {
+       e.preventDefault();
+       dispatch(selectedUsers(selectedUsers));
+       //Link to Home page
+    }
 
     return (
         <Container>
@@ -72,4 +89,4 @@ const Companies = ({data}) => {
     )
 }
 
-export default Companies
+export default React.memo(Companies)
