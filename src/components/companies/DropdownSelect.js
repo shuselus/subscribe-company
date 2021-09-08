@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import styled, {keyframes} from 'styled-components'
+import React, {useState, useEffect} from 'react'
+import styled from 'styled-components'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp} from "@fortawesome/free-solid-svg-icons";
 import { colormap } from '../../colormap'
@@ -10,6 +10,8 @@ const Container = styled.div`
     flex-flow: column;
     align-items: flex-start;
     justify-content: center;
+    width: inherit;
+    height: inherit;
     width: 250px;
     min-width: 150px;
     max-height: 300px;
@@ -18,33 +20,50 @@ const Expander= styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 1fr;
+    height: 40px;
     width: 100%;
-    border-radius: 6px;
-    border: 1px solid gray;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    ${props => props.expanded && `
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    `}
+    border: 1px solid ${params => params.disabled ? 'var(--disabled-color)' : 'var(--primary-color)'};
     padding: 6px 6px 9px 6px;
+    & span{
+        color: ${params => params.disabled ? 'var(--disabled-color)' : 'var(--primary-color)'};
+    }
     .expand-btn{
         width: 18px;
         height: 18px;
         cursor: pointer
     }
 `;
-const dropdown_anim = keyframes`
- from { top: -250px; opacity: 0; }
- to { top: 36px; opacity: 1; }
+const DropdownContent = styled.div`
+    position: absolute;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-left: 1px solid var(--color);
+    border-bottom: 1px solid var(--color);
+    border-right: 1px solid var(--color);
+    padding: 6px 12px;
+    transition: all 0.2s ease-in;
+    left: 0;
+    top: -100%;
+    opacity: 0;
+    visibility: hidden;
+    ${props => props.expanded && 
+      `top: 100%;
+       opacity: 1;
+       visibility: visible !important;
+      `
+    }
+    height: 260px;
+    max-height: 260px;
+    overflow-y: auto;
 `;
-const ListContainer = styled.div`
-   position: absolute;
-   width: 100%;
-   display: block;
-   margin: 0 auto;
-  
-    animation-name: ${dropdown_anim};  
-    animation-duration: 0.5s;
-    animation-iteration-count: 1;
-    animation-direction: ${props => props.expanded ? 'normal' : 'reverse'}; 
-    animation-timing-function: ease-in;
-`;
+
 const Radio = styled.label`
     font-size: 1.3rem;
     color: var(--color);
@@ -53,28 +72,31 @@ const Radio = styled.label`
     grid-gap: 0.5em;
     align-items: center;
     justify-items: start;
+    overflow: hidden;
     .radio-label {
         line-height: 1.5;
     }
-    overflow: hidden;
 `;
 const RadioInput= styled.span` 
     input {
         display: flex;
         opacity: 0;
-        width: 0;s
+        width: 0;
         height: 0;
+        ${props => props.type === 'radio' && `
         &:checked + .radio-control {
             background: radial-gradient(currentcolor 50%, rgba(255, 0, 0, 0) 51%);
-        }
+        `}
     }
     .radio-control {
         display: block;
         width: 0.8em;
         height: 0.8em;
-        border-radius: 50%;
         border: 0.1em solid currentColor;
-        transform: translateY(-0.05em);
+        transform: translateY(-0.28em);
+        ${props => props.type === 'radio' && `
+           border-radius: 50%;
+        `}
       }
 `;
 
@@ -85,49 +107,59 @@ const DropdownSelect = (
     title,
     selectionType,
     seartchField,
-    selectedCompany,
+    selectedItem,
     handler
 }
 ) => {
+    const [listData, setListdata] =  useState([...data]);
     const [expanded, setExpanded] = useState(false);
-    const [expandBtnIsDisabled, setExpandBtnIsDisabled] = useState(!data?.length);
-    
+    const [expandIsDisabled, setExpandIsDisabled] = useState(!data?.length);
+
+    console.log("DropdownSelect>>>",type, title,!data?.length);
+
+    useEffect(() => {
+        if(data?.length){
+            setListdata([...data]);
+            setExpandIsDisabled(false);
+        }
+        return () => {
+           // cleanup
+        }
+    }, [data])
+
     const dropdownToggle = (e) => {
+        if(expandIsDisabled) return;
         e.preventDefault();
         setExpanded(prev => !prev);
     }
- 
-
 
     return (
         <Container>
-        <Expander onClick={dropdownToggle}>
+        <Expander disabled={expandIsDisabled} onClick={dropdownToggle}>
             <span>select {title}</span>
-            <div className="expand-btn"  disabled={expandBtnIsDisabled} >
-                   <FontAwesomeIcon icon={faChevronUp} color="#7b1fa2" size="xs" rotation={expanded ? 180 : 0} />
+            <div className="expand-btn"   >
+                   <FontAwesomeIcon icon={faChevronUp} color={expandIsDisabled ? 'var(--disabled-color)' : 'var(--primary-color)'} size="xs" rotation={expanded ? 180 : 0} />
             </div>
         </Expander>
-        <ListContainer 
-        expanded={expanded}
-        onAnimationComplete={(()=>({display: 'none'}))}
-        >
-        {data?.length &&
-          data.map(({ name, id }) => (
-            <Radio key={id}>
-              <RadioInput>
+        <DropdownContent expanded={expanded}>
+        {listData?.length &&
+          data.map((item) => (
+            <Radio key={item.id} type={type}>
+              <RadioInput type={type}>
                 <input
                   type={type}
                   name={title}
-                  value={name}
-                  defaultChecked={selectedCompany === name}
-                  onChange={(e) => handler(e.target.name)}
+                  value={item.name}
+                  data = {item}
+                  defaultChecked={selectedItem && selectedItem === item.name}
+                  onChange={(e) => handler(item)}
                 />
                 <span className="radio-control"></span>
               </RadioInput>
-              <span className="radio-label">{name}</span>
+              <span className="radio-label">{item.name}</span>
             </Radio>
           ))}
-          </ListContainer>
+          </DropdownContent>
       </Container>
     )
 }

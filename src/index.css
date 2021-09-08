@@ -13,7 +13,9 @@
   box-sizing: border-box;
 }
 :root {
-  --color: rgb(119, 119, 119);
+  --color: #777777;
+  --disabled-color: #dbd9d9;
+  --primary-color: #777777;
 }
 .radio {
   font-size: 1.3rem;
