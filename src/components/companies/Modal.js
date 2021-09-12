@@ -38,7 +38,8 @@ const ModalContent = styled.div` {
     border: 1px solid #888;
     width: 50%;
     height: 50%;
-    min-height: 600px
+    min-height: 600px;
+    min-width: 600px;
   `;
 const CloseBtn = styled.span` {
     position: absolute;
@@ -62,9 +63,9 @@ const DSelectContainer = styled.div`
     grid-template-areas: 
     "company user" 
     "button button";
-    grid-gap: 2em;
+    grid-gap: 1fr;
     place-items: center;
-    width:70%;
+    width:100%;
     height: 100%;
     justify-items: center;
 `;
@@ -104,7 +105,7 @@ const Modal = ({data, displayModal}) => {
       }
 
     const updateUsersData = (company) => {
-        console.log("updateUsersData>>>>",company, data.data)
+        console.log("updateUsersData>>>>",company, data)
         const usersData = data.users.filter(user => 
             user.organizationId === company.id);
         let modefiedUsersData = [];

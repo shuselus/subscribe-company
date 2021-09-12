@@ -48,22 +48,12 @@ function App() {
   const { errorMssage } = useSelector(state => state.appDataReducer);
   
   useEffect(() => {
-    console.log("callToFetch")
+    const callToFetch = () => {
+      dispatch(getApiData());
+    };
+    console.log("callToFetch");
     callToFetch();
-    return () => {
-      const saveInLocalStorage = () => {
-        if(selectedCompany && Object.keys(selectedCompany).length > 0){
-          localStorage.setItem('selectedCompany', JSON.stringify(selectedCompany));
-        }   
-        if(selectedUsers && selectedUsers?.length){
-          localStorage.setItem('selectedUsers', JSON.stringify(selectedUsers));
-        }
-      }
-      //saveInLocalStorage();
-    }
-  }, [])
 
-  useEffect(()=>{
     const getFromLocalStorage = () => {
       if(localStorage.getItem('selectedCompany') !== null){
         const _selectedCompany = JSON.parse(localStorage.getItem('selectedCompany'));
@@ -75,12 +65,36 @@ function App() {
       }
     }
 
-    //getFromLocalStorage();
+    getFromLocalStorage();
+  }, [])
+
+  useEffect(()=>{
+   
+    const updateSelectedData = () => {
+      if(selectedCompany && Object.entries(selectedCompany).length > 0){
+        setCompany(prevState => selectedCompany);
+      }
+      if(selectedUsers?.length){
+        setUsers(prevState => selectedUsers);
+      }
+    }
+
+    updateSelectedData();
+
+    const saveInLocalStorage = () => {
+         if(selectedCompany && Object.keys(selectedCompany).length > 0){
+           localStorage.setItem('selectedCompany', JSON.stringify(selectedCompany));
+         }   
+         if(selectedUsers && selectedUsers?.length){
+           localStorage.setItem('selectedUsers', JSON.stringify(selectedUsers));
+         }
+    }
+    //saveInLocalStorage();
 
    },[selectedUsers, selectedCompany]);
 
   useEffect(()=>{
-    console.log("data>>>>>>", apiData && Object.entries(apiData).length > 0);
+    console.log("apiData>>>>>>", apiData, apiData && Object.entries(apiData).length > 0);
     if(apiData && Object.entries(apiData).length > 0){
 
       //random select company from the list in case of no recordings 
@@ -88,34 +102,17 @@ function App() {
       const getRandomCompany = () => {
         if(!(selectedCompany && Object.keys(selectedCompany).length > 0)){
           const companies = apiData.organizations;
-          const companyData = companies[Math.floor(Math.random() * companies.length)];
-          dispatch(selectedCompanyAction(companyData));
-          setLoading(false);
+          const selsectCompany = companies[Math.floor(Math.random() * companies.length)];
+          dispatch(selectedCompanyAction(selsectCompany));     
+          localStorage.setItem('selectedCompany', JSON.stringify(selectedCompany));  
         }
+        setLoading(false);
       }
 
       getRandomCompany();
-
+     
     }
   },[apiData]);
-
-  useEffect(()=>{
-    const updateSelectedData = () => {
-      if(selectedCompany && Object.entries(selectedCompany).length > 0){
-        setCompany(selectedCompany);
-      }
-      if(selectedUsers?.length){
-        setUsers(selectedUsers);
-      }
-    }
-
-    //updateSelectedData();
-
-  },[selectedCompany, selectedUsers])
-
-  const callToFetch = () => {
-    dispatch(getApiData());
-  };
    
   if(loading && !errorMssage){
     return (
@@ -152,7 +149,6 @@ function App() {
           </AppContainer>
           </>
         </Switch>
-        
     </Router>
     
     

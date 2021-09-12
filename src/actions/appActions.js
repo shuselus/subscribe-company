@@ -47,9 +47,9 @@ export const getApiData = () => {
   return  (dispatch) => {
     return FetchApiData()
       .then((response) => {
-        console.log("getApiData>>>> ", response);
+        //console.log("getApiData>>>> ", response);
         const {status, data} = response;
-        console.log("getApiData>>>>> ", response, data, status);
+        console.log("getApiData>>>>> ",  data, status);
         //initialize the apiDataReducer state in redux store
         if(status && parseInt(status) > 400){
           dispatch(errorOnFetchApiDataAction(status))
@@ -64,19 +64,3 @@ export const getApiData = () => {
       });
   };
 };
-
-// export const updateCurrentSectionMap = (changeData) => {
-//   return  (dispatch, getState) => {
-    
-//     const data = getState().currentSectionDataReducer;
-//     if(data.hasOwnProperty(changeData.name)){
-//       let obj = data[changeData.name][0];
-//       for(const key in obj){
-//         if (key === changeData.subName){
-//           obj[key] = changeData.value;
-//         }
-//       }
-//       dispatch(currentSectionData(data));
-//     }     
-//   }
-// }

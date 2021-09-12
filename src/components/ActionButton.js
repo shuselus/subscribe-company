@@ -42,6 +42,13 @@ const ButtonContainer = styled.button`
 const ActionButton = ({label, style = null, disabled = false, handler = null}) => {
     const [isDisabled, setIsDisabled] = useState(disabled);
 
+    useEffect(()=>{
+        const updateDisabledState = () =>{
+            setIsDisabled(disabled);
+        }
+        updateDisabledState();
+    },[disabled])
+
     console.log("ActionButton>>>>",label, style, disabled, handler);
     return (
         <ButtonContainer 

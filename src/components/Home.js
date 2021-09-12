@@ -28,7 +28,7 @@ const HeaderTxt = styled.h1`
 const BodyContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
 `;
 const BodyTxt = styled.p`
