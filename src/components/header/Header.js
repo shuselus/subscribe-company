@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import {useState, useEffect} from 'react'
 import Logo from './Logo'
 import NavBar from './navbar/NavBar'
 import styled from 'styled-components'
 import { colormap } from '../../colormap'
-
-// import { library} from "@fortawesome/fontawesome-svg-core";
-// import { fab } from "@fortawesome/free-brands-svg-icons";
-// import { faChevronUp, faCheck} from "@fortawesome/free-solid-svg-icons";
- //import { styles } from "../../styles/variables";
- //import PropTypes from 'prop-types'
-// library.add(fab, faChevronUp, faCheck);
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -17,7 +10,7 @@ const HeaderContainer = styled.header`
     position: relative;
     display: fixed;
     top: 0;
-    z-index: 1100;
+    z-index: 3;
     color: ${colormap.secondaryTxtColor};
     margin: 0 auto;
     background-color: ${colormap.headerBgColor};
@@ -49,26 +42,24 @@ const Title = styled.h3`
 `;
 
 const Header = ({selectedCompany}) => {
-    
-    // useEffect(() => {
-    //      setBrandName(()=>{
-    //         let {name} = data[Math.floor(Math.random()*data.length)];
-    //          let {name} = data.find(({name}) => name === 'Google');
-    //          console.log("name>>>>", name);
-    //          return name
-    //      })
-       
-    // },[]);
-
+    if(!selectedCompany) return(null);
+    if(selectedCompany && Object.entries(selectedCompany).length === 0) return(null);
     return (
         <HeaderContainer>
             <InnerContainer>
             <img className="header-image" alt="Cycode" src="https://cycode.com/wp-content/uploads/2020/10/Cycode_logo.svg" title="Cycode"/>
-            <div className="centered">                  
-                <Logo iconName={selectedCompany}/> 
-                <Title>{selectedCompany}</Title>
-                <NavBar />
-            </div>
+                 
+            {
+                selectedCompany && 
+                <div className="centered">  
+                    <Logo iconName={selectedCompany.name}/> 
+                    <Title>{selectedCompany.name}</Title>
+                    <NavBar />
+                </div>
+                
+            }           
+               
+            
             </InnerContainer>
            
         </HeaderContainer>

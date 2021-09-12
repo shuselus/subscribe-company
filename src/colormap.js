@@ -10,6 +10,5 @@ export const colormap = {
     secondaryTxtColor: "#fff",
     primaryBgColor: "#fff",
     secondaryBgColor: "#000",
-    
 };
 

@@ -5,7 +5,7 @@ const apiDataReducer = (state = {}, action) => {
   switch (action.type) {
     case API_DATA:
       //return {...state, list: action.list} ;
-      return data;
+      return data ?? {};
     default:
       return state;
   }

@@ -1,62 +1,60 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { reconnect } from '../actions/appActions'
+import { reconnectAction } from '../actions/appActions'
 import styled from 'styled-components'
-import { colormap } from '../colormap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFrown } from "@fortawesome/free-solid-svg-icons"
 import ActionButton from './ActionButton'
 
 
 const ErrorMsgContainer = styled.div`
-    width: 100%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 300px;
     padding: 10px;
+    background: red;
+    margin-top: 50px;
 `;
 const TextField = styled.h3`
-    color: #ff0000;
-    font-family: monospace;
-    font-size: 20px;
+    color: white;
+    font-family: 'Roboto';
+    font-size: 32px;
     font-weight: 600;
+    text-align: center;
 `;
 const Button = styled(ActionButton)`
     font-family: monospace;
-    font-size: 20px;
+    font-size: 2em;
     font-weight: 600;
     width: 300px;
+    background-color: white'
+    color: red;
 `;
 
-const ErrorMessage = () => {
+const ErrorMessage = ({message}) => {
     const dispatch = useDispatch();
     
-    const btnClockHandler = (e) => {
+    const reconnectHandler = (e) => {
         e.preventDefault();
-        dispatch(reconnect(true));
+        dispatch(reconnectAction(true));
     }
 
     return (
         <ErrorMsgContainer>
-            <FontAwesomeIcon icon={faFrown} size="4x" color="#6d6d6f"/>
+            <FontAwesomeIcon icon={faFrown} size="6x" color="#fff"/>
             <TextField>
                 {
-                `Error {reason} - oops, something goes wrong.
+                `Error ${parseInt(message)} - oops, something goes wrong.
                  An unexpected error ocured.
                  Please try to reconnect`
                  }
             </TextField>
             <Button 
-               label="reconnect"
-               style = {
-                   {
-                       color: colormap.primaryTxtColor,
-                       bgColor: colormap.primaryBgColor,
-                   }
-                }
-                handler = {btnClockHandler}
+               label="try to reconnect"
+               handler = {reconnectHandler}
             />
         </ErrorMsgContainer>
     )

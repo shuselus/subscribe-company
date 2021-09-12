@@ -1,27 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
-import { colormap } from '../../../colormap'
+import { Link } from "react-router-dom";
 
-const NavItemContainer = styled.a`
+const StyledLink = styled(Link)`
     margin: 0 12px;
-    color: ${colormap.linkColor};
+    color: var(--link-color);
     border: none;
     text-align: center;
     height: inherit;
     &:hover{
-        color: ${colormap.hoverLinkColor};
+        color: var(--hover-link-color);
     }
     &:active{
-        color: ${colormap.hoverLinkColor};
-        border-bottom:  ${colormap.secondaryColor};
+        color: var(--hover-link-color);
+        border-bottom: var(--secondary-color);
     }
 `;
 
 const NavItem = ({name, route}) => {
     return (
-        <NavItemContainer href={route}>
+        <StyledLink to={route}>
             {name}
-        </NavItemContainer>
+        </StyledLink>
     )
 }
 

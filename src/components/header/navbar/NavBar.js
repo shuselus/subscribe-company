@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { colormap } from '../../../colormap'
 import NavItem from './NavItem'
 
 const NavBarContainer = styled.nav`
@@ -17,8 +16,8 @@ const NavBarContainer = styled.nav`
 const NavBar = () => {
     return (
         <NavBarContainer>
-            <NavItem name="Home" route="home"/>
-            <NavItem name="Companies" route="companies"/>
+            <NavItem name="Home" route="/"/>
+            <NavItem name="Organizations" route="/organizations"/>
         </NavBarContainer>
     )
 }

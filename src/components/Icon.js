@@ -7,7 +7,6 @@ export const Icon = ({iconStyle, iconName, ...rest})=> {
 
   return (
     <div>
-         
       <FontAwesomeIcon icon={['fab', iconName.toLowerCase()]} 
             size = {size} rotation={rotation} spin={spin} border={border} pull={pull} flip={flip}  />
     </div>

@@ -1,16 +1,18 @@
 import axios from 'axios'
 
-const baseUrl = 'https://api.jsonbin.io/';
-const apiPath = 'b/61316d8ec4352e1d0767ef45';
-const secretKey = '$2b$10$.4wgKaby4mGk011wlLE8X.sjvAX9kaTPER32jQynfXRPhX7DhFsnu';
+const baseUrl = "https://mocki.io/v1/d172b987-a068-4ba6-9ae0-a17e91973f10";//'https://api.jsonbin.io/';//'https://api.jsonbin.io/v3';
+//const binId = 'b/613da76daa02be1d4446adcc';
+//const secretKey = '$2b$10$rm58Ra.Anq8XmbX.J/jC/OVhdaQkzQs5/uS0w9zyI2biOP6qfZMw6';
 
 const FetchApiData = async () => {
     try{
-       return await axios.get(`${baseUrl}${apiPath}`,{
-           headers:{
-            "secret-key": secretKey
-           }
-       })
+    //    return await axios.get(`${baseUrl}${binId}`,{
+    //        headers:{
+    //         "secret-key": secretKey
+    //        }
+    //    })
+      return await axios.get(baseUrl);
+      
     }
     
     catch(error){

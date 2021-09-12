@@ -6,38 +6,38 @@ export const SELECTED_USERS = 'SELECTED_USERS';
 export const RECONNECT = "RECONNECT";
 export const ERROR_MESSAGE = "ERROR_MESSAGE";
 
-export const apiData = (data) => {
+export const apiDataAction = (dataObject) => {
   return {
     type: API_DATA,
-    data: data,
+    data: dataObject,
   };
 };
 
-export const selectedCompanyName = (name) => {
+export const selectedCompanyAction = (dataObject) => {
   return {
     type: SELECTED_COMPANY,
-    payload: name,
+    payload: dataObject,
   };
 };
 
-export const selectedUsers = (data) => {
+export const selectedUsersAction = (dataArray) => {
   return {
     type: SELECTED_USERS,
-    payload: data,
+    payload: dataArray,
   };
 };
 
-export const reconnect = (msg) => {
+export const reconnectAction = (str) => {
   return {
     type: RECONNECT,
-    payload: msg,
+    payload: str,
   };
 };
 
-export const errorOnFetchApiData = (msg) => {
+export const errorOnFetchApiDataAction = (str) => {
   return {
     type: ERROR_MESSAGE,
-    payload: msg,
+    payload: str,
   };
 };
 
@@ -46,14 +46,21 @@ export const errorOnFetchApiData = (msg) => {
 export const getApiData = () => {
   return  (dispatch) => {
     return FetchApiData()
-      .then(({ data }) => {
-        console.log("getApiData>>>> ", data);
-        //initialize the apiData in redux store
-        dispatch(apiData(data));
+      .then((response) => {
+        console.log("getApiData>>>> ", response);
+        const {status, data} = response;
+        console.log("getApiData>>>>> ", response, data, status);
+        //initialize the apiDataReducer state in redux store
+        if(status && parseInt(status) > 400){
+          dispatch(errorOnFetchApiDataAction(status))
+        }else{
+          dispatch(apiDataAction(data));
+        }
+        
       })
       .catch((error) => {
         console.log("error>>>>", error)
-        dispatch(errorOnFetchApiData(error.message))
+        dispatch(errorOnFetchApiDataAction(error.message))
       });
   };
 };
