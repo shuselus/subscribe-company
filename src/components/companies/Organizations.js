@@ -1,57 +1,35 @@
-import React, { useMemo, useCallback } from 'react'
+import React, {useState} from 'react'
 import useToggle from '../../hooks/useToggle'
 import styled from 'styled-components'
 import ActionButton from '../ActionButton'
 import Modal from './Modal'
 
-const Container = styled.div`
-    width: 100%;
+const ContentContainer = styled.div`
+    padding: 40px 30px;
+    width: 50%;
     height: 100%;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-txt-color);
-`;
-const ContentContainer = styled.div`
-    position: absolute;
-    display: flax;
-    align-items: center;
-    justify-items: center;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, 0); 
+    background-color: var(--primary-bg-color);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
 
 const Organizations = ({data}) => {
-    const [displayModal, setDisplayModal] = useToggle(false);
+    const [showModal, setShowModal] = useState(false);
     console.log("Companies>>>>", data);  
-    
-    const modalComponent = useMemo(()=>{
-        if(!data){
-            return null;
-        } 
-      return <Modal data={data} displayModal={displayModal}/>
-    },[data, displayModal]);
-
-    const buttonHandler= useCallback(() => {
-        setDisplayModal();
-    },[displayModal]);
     
     return (
         <>
-        <Container className="OrganizationsContainer">
             <ContentContainer className="OrganizationssContentContainer">
-                <ActionButton label={"SUBSCRIBE"} style={{fontSize: '1.5em'}} handler={buttonHandler}/>
+                <ActionButton label={"SUBSCRIBE"} style={{fontSize: '1.5em'}} handler={() => setShowModal(true)}/>
             </ContentContainer>
-            <Modal data={data} displayModal={displayModal}/>
             {
-             // modalComponent
+                showModal && <Modal displayModal={showModal} closeModal={() => setShowModal(false)}/>
             }
-        </Container>
-        
       </>
     )
 }
 
-export default React.memo(Organizations)
+export default Organizations

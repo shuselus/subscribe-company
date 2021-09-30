@@ -1,27 +1,27 @@
 import React, { useState, useEffect, Suspense  } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { getApiData, apiDataAction, selectedCompanyAction, selectedUsersAction } from './actions/appActions'
-import FetchApiData from './api/FetchApiData'
-import styled from 'styled-components'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { getApiData, selectedCompanyAction, selectedUsersAction } from './actions/appActions'
+import useLocalStorage from './hooks/useLocalStorage'
 import Header from './components/header/Header'
 import Organizations from './components/companies/Organizations'
 import Home from './components/Home'
 import ErrorMessage from './components/ErrorMessage'
+import styled from 'styled-components'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 //export const contextAppData = React.createContext(null);
-//const baseUrl = 'https://jsonkeeper.com/b/XSMF';
 
 const AppContainer = styled.div`
-position: relative;
-display: flex;
-flex-flow: column;
-align-items: center;
-justify-content: flex-start;
-width: 100%;
-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--app-bg-color);
 `;
 const Loading = styled.div`
   margin-top: 100px;
@@ -36,84 +36,73 @@ const Loading = styled.div`
 
 
 function App() {
-  //const [apiData, setApiData] = useState({});
-  const [company, setCompany] = useState({});
-  const [users, setUsers] = useState({});
-  //const [error, setError] = useState(null);
+ 
   const [loading, setLoading] = useState(true);
+
   const dispatch = useDispatch();
   const apiData = useSelector(state => state.apiDataReducer);
   const { selectedCompany, selectedUsers } = useSelector(state => state.appDataReducer);
   const { reconnect } = useSelector(state => state.appDataReducer);
   const { errorMssage } = useSelector(state => state.appDataReducer);
+
+   //custom hook for saving end extracting from LocalStorage
+   const [selectedCompanyState, setSelectedCompanyState] = useLocalStorage('selectedCompany', null);
+   const [selectedUsersState, setSelectedUsersState] = useLocalStorage('selectedUsers', null);
   
   useEffect(() => {
     const callToFetch = () => {
       dispatch(getApiData());
     };
-    console.log("callToFetch");
     callToFetch();
-
-    const getFromLocalStorage = () => {
-      if(localStorage.getItem('selectedCompany') !== null){
-        const _selectedCompany = JSON.parse(localStorage.getItem('selectedCompany'));
-        dispatch(selectedCompanyAction(_selectedCompany));
-      }
-      if(localStorage.getItem('selectedUsers') !== null){
-          const _selectedUsers =  JSON.parse(localStorage.getItem('selectedUsers'));
-          dispatch(selectedUsersAction(_selectedUsers));
-      }
-    }
-
-    getFromLocalStorage();
-  }, [])
+  }, []);
 
   useEffect(()=>{
-   
-    const updateSelectedData = () => {
-      if(selectedCompany && Object.entries(selectedCompany).length > 0){
-        setCompany(prevState => selectedCompany);
-      }
-      if(selectedUsers?.length){
-        setUsers(prevState => selectedUsers);
-      }
-    }
-
-    updateSelectedData();
-
-    const saveInLocalStorage = () => {
-         if(selectedCompany && Object.keys(selectedCompany).length > 0){
-           localStorage.setItem('selectedCompany', JSON.stringify(selectedCompany));
-         }   
-         if(selectedUsers && selectedUsers?.length){
-           localStorage.setItem('selectedUsers', JSON.stringify(selectedUsers));
-         }
-    }
-    //saveInLocalStorage();
-
-   },[selectedUsers, selectedCompany]);
-
-  useEffect(()=>{
-    console.log("apiData>>>>>>", apiData, apiData && Object.entries(apiData).length > 0);
+    console.log("apiData>>>>>>", apiData);
     if(apiData && Object.entries(apiData).length > 0){
 
       //random select company from the list in case of no recordings 
       //in localStorage, (according to the task requirements)
-      const getRandomCompany = () => {
-        if(!(selectedCompany && Object.keys(selectedCompany).length > 0)){
-          const companies = apiData.organizations;
-          const selsectCompany = companies[Math.floor(Math.random() * companies.length)];
-          dispatch(selectedCompanyAction(selsectCompany));     
-          localStorage.setItem('selectedCompany', JSON.stringify(selectedCompany));  
+      const getCompanyData = () => {
+        if(selectedCompanyState && Object.entries(selectedCompanyState).length > 0){
+        dispatch(selectedCompanyAction(selectedCompanyState));   
+        } else {
+          const _companies = apiData.organizations;
+          const _selsectCompany = _companies[Math.floor(Math.random() * _companies.length)];
+          dispatch(selectedCompanyAction(_selsectCompany));
         }
-        setLoading(false);
+         setLoading(false);  
       }
-
-      getRandomCompany();
-     
+      getCompanyData();
     }
   },[apiData]);
-   
+
+  useEffect(()=>{
+    //get selected from localStorage
+    const getStoredData = () => {
+      if(selectedCompanyState && Object.entries(selectedCompanyState).length > 0){
+        dispatch(selectedCompanyAction(selectedCompanyState));
+      }
+      if(selectedUsersState?.length){
+        dispatch(selectedUsersAction(selectedUsersState));
+      }
+    }
+    getStoredData()
+  },[selectedCompanyState, selectedUsersState]);
+
+
+  useEffect(()=>{
+    //saving selected to localStorage
+    const updateSelectedData = () => {
+      if(selectedCompany && Object.entries(selectedCompany).length > 0){
+        setSelectedCompanyState(selectedCompany);
+      }
+      if(selectedUsers?.length){
+        setSelectedUsersState(selectedUsers);
+      }
+    }
+    updateSelectedData()
+  },[selectedCompany, selectedUsers]);
+  
   if(loading && !errorMssage){
     return (
       <AppContainer>
@@ -137,17 +126,17 @@ function App() {
   return (  
       <Router>
         <Switch>
-          <>
+        <>
         <AppContainer className="app-container">
-          <Header selectedCompany={company} /> 
+          <Header selectedCompany={selectedCompanyState} /> 
           <Route exact path="/">
-            <Home selectedCompany={company} selectedUsers={users}/> 
+            <Home selectedCompany={selectedCompanyState} selectedUsers={selectedUsersState}/> 
           </Route>
           <Route path="/organizations">
             <Organizations data={apiData}/>
           </Route>
           </AppContainer>
-          </>
+        </>
         </Switch>
     </Router>
     

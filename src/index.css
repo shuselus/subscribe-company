@@ -12,6 +12,7 @@
 *:after {
   box-sizing: border-box;
 }
+
 :root {
   --color: #777777;
   --disabled-color: #dbd9d9;
@@ -20,12 +21,14 @@
   --dd-bgr: whitesmoke;
   --primary-txt-color: #363636;
   --secondary-txt-color: whitesmoke;
-  --header-bg-color: "#555";
-  --button-bg-color: "#555";
+  --app-bg-color: whitesmoke;
+  --header-bg-color: #555;
+  --button-bg-color: #555;
   --primary-bg-color: white;
   --secondary-bg-color: #202020;
   --primary-h1-color: #202020;
-  --link-color: "#f1f1f1";
+  --active-link-color: #f1f1f1;
+  --inactive-link-color: #e2e2e2;
   --hover-link-color: "#fff";
   --h1-heavy: 800;
 }

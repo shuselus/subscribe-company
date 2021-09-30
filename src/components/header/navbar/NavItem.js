@@ -1,27 +1,43 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link } from "react-router-dom";
+import { NavLink  } from "react-router-dom";
 
-const StyledLink = styled(Link)`
+const StyledNavLink = styled(NavLink)`
+ 
     margin: 0 12px;
-    color: var(--link-color);
+    color: var(--inactive-link-color);
     border: none;
     text-align: center;
     height: inherit;
-    &:hover{
-        color: var(--hover-link-color);
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+   
+    &:hover {
+        transition: all 0.2s ease-in-out;
+        color: 'var(--hover-link-color)',
+        textDecoration: 'underline'
     }
-    &:active{
-        color: var(--hover-link-color);
-        border-bottom: var(--secondary-color);
-    }
+    
 `;
 
-const NavItem = ({name, route}) => {
+
+
+const NavItem = ({name, route, exact = null}) => {
+    const activeStyle={
+        color: 'var(--acive-link-color)',
+        textDecoration: 'underline'
+    }
+
+     
     return (
-        <StyledLink to={route}>
+        <>
+        <StyledNavLink to={route} exact activeStyle={activeStyle}>
             {name}
-        </StyledLink>
+        </StyledNavLink>
+        <StyledNavLink to={route} activeStyle={activeStyle}>
+            {name}
+        </StyledNavLink>
+        </>
     )
 }
 

@@ -1,4 +1,4 @@
-import FetchApiData from '../api/FetchApiData'
+import FetchApiData from '../api/FetchApiData';
 
 export const API_DATA = "API_DATA";
 export const SELECTED_COMPANY = 'SELECTED_COMPANY';
@@ -55,8 +55,8 @@ export const getApiData = () => {
           dispatch(errorOnFetchApiDataAction(status))
         }else{
           dispatch(apiDataAction(data));
+         // dispatch(getFromLocalstorage());
         }
-        
       })
       .catch((error) => {
         console.log("error>>>>", error)
@@ -64,3 +64,23 @@ export const getApiData = () => {
       });
   };
 };
+
+export const getFromLocalstorage = () => {
+  return  (dispatch, getState) => {
+    const selectedCompany = localStorage.getItem('selectedCompany');
+    const selectedUsers = localStorage.getItem('selectedUsers');
+    // Parse stored json or if none return initialValue
+    if(selectedCompany && Object.entries(selectedCompany) > 0){
+      dispatch(selectedCompanyAction(JSON.parse(selectedCompany)));
+    }else{
+      const apiData = getState().apiDataReducer;
+      const _companies = apiData.organizations;
+      const _selectedCompany = _companies[Math.floor(Math.random() * _companies.length)];
+      dispatch(selectedCompanyAction(_selectedCompany));   
+      localStorage.setItem('selectedCompany', JSON.stringify(_selectedCompany));
+    }
+    if(selectedUsers?.length){
+      dispatch(selectedUsersAction(JSON.parse(selectedUsers)));
+    } 
+  }
+}

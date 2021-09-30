@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const Icon = ({iconStyle, iconName, ...rest})=> {
   //const { iconStyle, iconName } = props;
+  console.log('Icon>>>>', iconName)
   const { size, rotation, spin, border, pull, flip } = rest;  
 
   return (

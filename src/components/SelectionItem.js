@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import useToggle from '../hooks/useToggle'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck} from "@fortawesome/free-solid-svg-icons";
+import {ReactComponent as V_SVG} from '../svgs/checkbox-v.svg';
 
 const SelectContainer = styled.label`
     font-size: 1.3rem;
@@ -71,19 +70,16 @@ const InputContainer = styled.span`
     }`;
 
 const SelectionItem = ({data, type, groupName, defaultSelected = null, handler}) => {
-    const [itemData, setItemData] = useState({...data});
-    const [isChecked, setIsChecked] = useToggle();
-    const [isDisabled, setIsDisabled] = useState(false);
+    //const [itemData, setItemData] = useState({...data});
+    //const [isChecked, setIsChecked] = useToggle();
+    //const [isDisabled, setIsDisabled] = useState(false);
+    
    // console.log("SelectionItem>>>>", type, groupName, defaultSelected);
 
      const onChangeHandler = (e) => {
-         setIsChecked(e.target.checked);
-         handler(itemData, e.target.checked);
+         //setIsChecked(e.target.checked);
+         handler(data, e.target.checked);
      }
-
-    //  useEffect(() => {
-    //      handler(itemData, isChecked);
-    //  }, [isChecked])
 
     return (
         <div>
@@ -92,32 +88,20 @@ const SelectionItem = ({data, type, groupName, defaultSelected = null, handler})
                 <input
                     type={type}
                     name={groupName}
-                    // checked={isChecked}
                     defaultChecked={defaultSelected}
-                    disabled = {isDisabled}
+                    //disabled = {isDisabled}
                     onChange={onChangeHandler}
                 />
                 <span className="select-control">
                     {
-                        type === 'checkbox' && 
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                            focusable="false"
-                        >
-                            <path
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            d="M1.73 12.91l6.37 6.37L22.79 4.59"
-                            />
-                        </svg>
+                        type === 'checkbox' &&  
+                        <V_SVG/>
+                       
                     }
                    
                 </span>
                 </InputContainer>
-                <span className="select-label">{itemData.name}</span>
+                <span className="select-label">{data.name}</span>
             </SelectContainer>
         </div>
     )

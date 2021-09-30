@@ -7,15 +7,16 @@ import ActionButton from './ActionButton'
 
 
 const HomeContainer = styled.div`
-    padding-top: 40px;
+    padding: 40px 30px;
     width: 50%;
-    height: 100vh;
+    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-
+    background-color: var(--primary-bg-color);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
 const HeaderTxt = styled.h1`
     font-weight: var(--h1-heavy);
@@ -30,6 +31,8 @@ const BodyContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    padding-buttom: 30px;
+    height: 100%;
 `;
 const BodyTxt = styled.p`
     color: var(--primart-txt-color);
@@ -40,10 +43,15 @@ const BodyTxt = styled.p`
     overflow-wrap: break-word;
 `;
 const UserListContainer = styled.ul`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: inherit;
     list-style: none;
     font-size: 1.4em;
-    margin: 0 0 1.25rem 0;
-    line-height: 1.25em;
+    margin: 0 0 1.30rem 0;
+    line-height: 1.30em;
+
 `;
 const UserListItem = styled.li`
     padding-left: 1.4em;
@@ -61,7 +69,7 @@ const Home = ({selectedCompany, selectedUsers}) => {
     const history = useHistory();
     
     const renderText = () => {
-        if(selectedUsers?.length){
+        if(selectedUsers && selectedUsers?.length){
             return (
                 <>
                     <HeaderTxt className="HeaderTxt">
@@ -71,11 +79,10 @@ const Home = ({selectedCompany, selectedUsers}) => {
                     </HeaderTxt>
                     <BodyContainer className="BodyContainer">
                     <BodyTxt className="BodyTxt">
-                    {
-                        `Selectet Organization: ${selectedCompany.name}`
-                    }
+                      <strong>Selectet Organization:</strong> {selectedCompany.name}
                     </BodyTxt>
-                    <UserListContainer className="UserListContainer">{`Selectet users: `}
+                    <UserListContainer className="UserListContainer">
+                        <strong>Selectet users:</strong>
                     {
                         
                         selectedUsers.map(user => 
@@ -116,7 +123,11 @@ const Home = ({selectedCompany, selectedUsers}) => {
             {
               renderText()
             }
-            <ActionButton label={"SUBSCRIPTION PAGE"} style={{fontSize: '1.5em'}}  handler={()=>{history.push('/organizations')}}/> 
+            {
+                !(selectedUsers && selectedUsers?.length) &&
+                <ActionButton label={"SUBSCRIPTION PAGE"} style={{fontSize: '1.5em'}}  handler={()=>{history.push('/organizations')}}/> 
+            }
+           
         </HomeContainer>
     )
 }

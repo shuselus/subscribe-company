@@ -40,7 +40,7 @@ library.add(fab);
 
 const Logo = ({iconName}) => {
     return(
-       <Icon iconStyle={fab} iconName={iconName} color="#4081ec" size="3x" border={false}/> 
+       <Icon iconStyle={fab} iconName={iconName} color="#4081ec" size="4x" border={false}/> 
     )
     
 }
